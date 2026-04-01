@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concept</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+</head>
+
+<body>
+<div class="header">
+    <div class="devinette"></div>
+    <div class="nouveau-mot" onclick="chargerMot()">R</div>
+</div>
+<div class="boutons">
+   <div class="reset" onclick="resetLettres()">Reset</div>
+    <div class="save" id="btnSave" onclick="sauvegarder()">Sauvegarder</div>
+</div>
+
+<script>
+/* ==============================
+   CONFIGURATION
+================================ */
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTnAkjAsuUiBntgeUtfdFKVL_9lOcBV_JM0_K20E734x_rlrmykfHjbxOUQ6Cc-4k145-dYMj6VZD-3/pub?output=csv";
+const DRIVE_URL = "https://script.google.com/macros/s/AKfycbwE507ySOQrt3CvSRTLDJ58oUDbV6wTi6DybiiWSjO7vsLqmu-LhnpQ3JGsbHxyvGPY/exec";
+
+/* ==============================
+   BOUTON RESET
+================================ */
+function resetLettres() {
+    document.querySelectorAll(".lettre").forEach(l => l.remove());
+}
+
+/* ==============================
+   BOUTON SAUVEGARDER (local + Drive)
+================================ */
+async function sauvegarder() {
+    const btn = document.getElementById("btnSave");
+    btn.textContent = "⏳ Envoi...";
+    btn.style.pointerEvents = "none";
+
+    try {
+        const canvas = await html2canvas(document.body);
+        const imageBase64Full = canvas.toDataURL("image/png");
+        const imageBase64 = imageBase64Full.split(",")[1];
+
+        // Nom du fichier
+        const mot = document.querySelector(".devinette").textContent || "image";
+        const now = new Date();
+        const date = now.toLocaleString("fr-FR")
+            .replace(/[/:]/g, "-")
+            .replace(" ", "_");
+        const nomFichier = `${mot}_${date}.png`;
+
+        // ── 1. Téléchargement local ──
+        const lien = document.createElement("a");
+        lien.href = imageBase64Full;
+        lien.download = nomFichier;
+        lien.click();
+
+        // ── 2. Envoi vers Google Drive ──
+        const response = await fetch(DRIVE_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                image: imageBase64,
+                nom: nomFichier
+            })
+        });
+
+        const result = await response.text();
+        console.log("Drive :", result);
+
+        btn.textContent = "✅ Sauvegardé";
+        setTimeout(() => {
+            btn.textContent = "Sauvegarder";
+            btn.style.pointerEvents = "auto";
+        }, 2500);
+
+    } catch (err) {
+        console.error("Erreur sauvegarde :", err);
+        btn.textContent = "❌ Erreur";
+        setTimeout(() => {
+            btn.textContent = "Sauvegarder";
+            btn.style.pointerEvents = "auto";
+        }, 2500);
+    }
+}
+
+/* ==============================
+   GOOGLE SHEETS — MOT ALÉATOIRE
+================================ */
+async function chargerMot() {
+    const response = await fetch(SHEET_URL);
+    const csv = await response.text();
+    const mots = csv.split("\n").map(m => m.trim()).filter(m => m !== "");
+    const mot = mots[Math.floor(Math.random() * mots.length)];
+    afficherMot(mot);
+}
+
+function afficherMot(mot) {
+    document.querySelector(".devinette").textContent = mot;
+}
+
+/* ==============================
+   VARIABLES GLOBALES
+================================ */
+let active = null;
+let isDragging = false;
+let mode = null;
+let hasMoved = false;
+
+let offsetX = 0;
+let offsetY = 0;
+
+let startX, startY;
+let startRotation, startScale, startFlip;
+
+const ROTATION_SENSITIVITY = 0.5;
+const SCALE_SENSITIVITY = 0.005;
+
+/* ==============================
+   CREATION D'UNE LETTRE
+================================ */
+document.addEventListener("keydown", e => {
+    if (e.key.length !== 1) return;
+
+    const div = document.createElement("div");
+    div.className = "lettre";
+    div.textContent = e.key;
+
+    div.dataset.rotation = 0;
+    div.dataset.scale = 1;
+    div.dataset.flip = 1;
+    div.dataset.tx = 0;
+    div.dataset.ty = 0;
+
+    document.body.appendChild(div);
+    attachEvents(div);
+});
+
+/* ==============================
+   ATTACHE DES EVENEMENTS
+================================ */
+function attachEvents(el) {
+    el.addEventListener("mousedown", e => {
+        active = el;
+        isDragging = true;
+        hasMoved = false;
+
+        startX = e.clientX;
+        startY = e.clientY;
+
+        startRotation = parseFloat(el.dataset.rotation);
+        startScale = parseFloat(el.dataset.scale);
+        startFlip = parseFloat(el.dataset.flip);
+
+        offsetX = parseFloat(el.dataset.tx);
+        offsetY = parseFloat(el.dataset.ty);
+
+        if (e.button === 2) mode = "transform";
+        else mode = "move";
+    });
+}
+
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+/* ==============================
+   MOUVEMENT DE LA SOURIS
+================================ */
+document.addEventListener("mousemove", e => {
+    if (!isDragging || !active) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasMoved = true;
+
+    if (mode === "move") {
+        active.dataset.tx = offsetX + dx;
+        active.dataset.ty = offsetY + dy;
+        applyTransform(active);
+    }
+
+    if (mode === "transform") {
+        const newRotation = startRotation + dx * ROTATION_SENSITIVITY;
+        const newScale = Math.max(0.1, startScale - dy * SCALE_SENSITIVITY);
+        active.dataset.rotation = newRotation;
+        active.dataset.scale = newScale;
+        applyTransform(active);
+    }
+});
+
+/* ==============================
+   FIN DU CLIC
+================================ */
+document.addEventListener("mouseup", e => {
+    if (!active) return;
+
+    if (!hasMoved && e.button === 0) {
+        active.dataset.flip *= -1;
+        applyTransform(active);
+    }
+
+    isDragging = false;
+    active = null;
+});
+
+/* ==============================
+   APPLICATION DES TRANSFORMATIONS
+================================ */
+function applyTransform(el) {
+    const rotation = el.dataset.rotation;
+    const scale = el.dataset.scale;
+    const flip = el.dataset.flip;
+    const tx = el.dataset.tx;
+    const ty = el.dataset.ty;
+
+    el.style.transform = `translate(${tx}px, ${ty}px) rotate(${rotation}deg) scale(${scale * flip}, ${scale})`;
+}
+
+/* ==============================
+   INIT
+================================ */
+chargerMot();
+</script>
+
+</body>
+</html>

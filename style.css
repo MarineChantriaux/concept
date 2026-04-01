@@ -1,0 +1,121 @@
+:root {
+  font-family: Inter, sans-serif;
+  font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: #f4f4f4;
+}
+
+/* Style des lettres */
+.lettre {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(0,0) rotate(0deg) scale(1,1);
+    transform-origin: center center;
+    cursor: grab;
+    user-select: none;
+    will-change: transform; /* optimisation performance */
+
+}
+
+.lettre {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    /* Transform initial :
+       - centrer visuellement
+       - rotation 0°
+       - scale 1
+    */
+    transform: translate(-50%, -50%) rotate(0deg) scale(1,1);
+font-family: "Inter", sans-serif;
+    transform-origin: center center; /* pivot au centre */
+    font-size: 150px;
+    font-weight: bold;
+    cursor: grab;
+    user-select: none;
+    will-change: transform; /* optimisation performance */
+}
+
+
+.header{
+    display: flex;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    gap: 30px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.devinette {
+    font-size: 24px;
+    padding: 15px 120px;
+    background-color: rgb(230, 230, 230);
+    border-radius: 8px;
+    z-index: 1000;
+}
+
+.nouveau-mot{
+    z-index: 1000;
+    padding: 10px 20px;
+    background-color: #ff480b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Boutons */
+.boutons{
+    display: flex;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    gap: 30px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.reset{
+    background-color: #f4ddff;
+    color: rgb(142, 40, 0);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+
+}
+
+.save{
+    background-color: #ff5500;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+
+
+
+
+
+
+
+
+/* Zone créative */
+#canvasArea {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    overflow: hidden;
+}
+
