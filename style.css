@@ -12,7 +12,7 @@ body {
 }
 
 img{
-    width: 45px;
+    width: 50px;
 }
 
 /* Style des lettres */
@@ -50,10 +50,11 @@ font-family: "Inter", sans-serif;
 
 .devinette {
     font-size: 24px;
-    padding: 15px 120px;
+    padding: 12px 120px;
     background-color: #F2EDE6;
     border-radius: 8px;
     z-index: 1000;
+    align-content: center;
 }
 
 .zone {
@@ -103,13 +104,6 @@ font-family: "Inter", sans-serif;
     z-index: 1000;
 }
 
-.reset{
-    /* background-color: #f4ddff; */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-
-}
 
 .save{
         background-color: #ff5500;
@@ -119,18 +113,17 @@ font-family: "Inter", sans-serif;
     border-radius: 5px;
 
      img{
-        width: 60px;
-        height: 60px;}
+        width: 80px;
+        height: 80px;}
 }
 
 
 .poubelle {
     /* background-color: #f4ddff; */
-    padding: 10px 12px;
+    padding: 10px 10px;
     border-radius: 5px;
-    font-size: 18px;
     transition: transform 0.15s, background-color 0.15s;
-    justify-content: bottom;
+    align-content: center;
 }
 
 .pb-normal {

@@ -24,13 +24,14 @@ et représente une idée associée à un mot. Le plus important, c’est de bien
             <br><strong>Comment jouer</strong>
             <p>Appuie sur une touche du clavier pour faire apparaître un glyphe : lettre minuscule, majuscule, ponctuation, etc.</p>
             <p><strong>Déplacer</strong> : clic gauche + glisser</p>
-            <p><strong>Tourner</strong> : clic droit + glisser</p>
+            <p><strong>Pivoter</strong> : clic droit + glisser</p>
             <p><strong>Agrandir ou rétrécir</strong> : molette de la souris</p>
             <p><strong>Retourner</strong> : clic gauche simple</p>
             <p><strong>Supprimer une lettre </strong> : glisser sur <img src="img/poubelle-fermee.svg" style="height: 1em; width: auto; vertical-align: middle; border-radius: 0;"></p>
+            <p><strong>Réinitialiser</strong> : clic sur <img src="img/poubelle-fermee.svg" style="height: 1em; width: auto; vertical-align: middle; border-radius: 0;"></p>
             <p><strong>Sauvegarder</strong> : clic sur <img src="img/save.svg" style="height: 1em; width: auto; vertical-align: middle; border-radius: 0;"></p>            
-            <p><strong>Réinitialiser</strong> : clic sur <img src="img/reset.svg" style="height: 1em; width: auto; vertical-align: middle;"></p>
-            
+
+
             <br><strong>Comment je vais utiliser ta production</strong>
             <p>En sauvegardant tes dessins, tu les envoies sur un drive 
                 que j'ai créé pour ce projet. 
@@ -51,23 +52,21 @@ et représente une idée associée à un mot. Le plus important, c’est de bien
 <div class="info" onclick="ouvrirInfo()"><img src="img/info.svg"></div>
 
 <div class="boutons">
-   <div class="reset" onclick="resetLettres()">
+   <!-- <div class="reset" onclick="resetLettres()">
         <img src="img/reset.svg" class="reset-normal">
-    </div>
-    <!-- <div class="reset" onclick="resetLettres()">R</div> -->
-   </div>
+    </div> -->
     <div class="poubelle" id="poubelle">
         <img src="img/poubelle-fermee.svg" class="pb-normal">
         <img src="img/poubelle-ouverte.svg" class="pb-hover">
     </div>
-    <!-- <div class="poubelle" id="poubelle">🗑</div> -->
-   <div class="bulle" id="bulle">Glisse une lettre sur la poubelle pour l'effacer de l'écran</div>
     <div class="save" id="poubelle">
         <img src="img/save.svg" class="save-normal">
         <img src="img/save2.svg" class="save-hover">
     </div>
-    <!-- <div class="save" id="btnSave" onclick="sauvegarder()">Sauvegarder</div> -->
 </div>
+
+   <div class="bulle" id="bulle">Glisse une lettre sur la poubelle pour l'effacer de l'écran. <br>Clique pour réinitialiser.</div>
+
 
 <script>
 /* ==============================
@@ -233,7 +232,7 @@ function attachEvents(el) {
     }, { passive: false });
 }
 
-document.addEventListener("contextmenu", e => e.preventDefault());
+// document.addEventListener("contextmenu", e => e.preventDefault());
 
 /* ==============================
    MOUVEMENT DE LA SOURIS
