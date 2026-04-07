@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 </head>
 
-<div class="overlay-info" id="overlayInfo">
+
+
+<body>
+    <div class="overlay-info" id="overlayInfo">
     <div class="modale-info">
         <button class="modale-info__fermer" onclick="fermerInfo()">✕</button>
         <div class="modale-info__contenu">
@@ -40,8 +43,6 @@ et représente une idée associée à un mot. Le plus important, c’est de bien
         </div>
     </div>
 </div>
-
-<body>
 <div class="header">
     <div class="devinette"></div>
     <!-- <div class="nouveau-mot" onclick="chargerMot()">R</div> -->
@@ -59,7 +60,7 @@ et représente une idée associée à un mot. Le plus important, c’est de bien
         <img src="img/poubelle-fermee.svg" class="pb-normal">
         <img src="img/poubelle-ouverte.svg" class="pb-hover">
     </div>
-    <div class="save" id="poubelle">
+    <div class="save" id="btnSave" onclick="sauvegarder()">
         <img src="img/save.svg" class="save-normal">
         <img src="img/save2.svg" class="save-hover">
     </div>
@@ -87,8 +88,8 @@ function resetLettres() {
 ================================ */
 async function sauvegarder() {
     const btn = document.getElementById("btnSave");
-    btn.textContent = "⏳ Envoi...";
     btn.style.pointerEvents = "none";
+    btn.style.opacity = "0.5";
 
     try {
         const canvas = await html2canvas(document.body);
@@ -118,22 +119,14 @@ async function sauvegarder() {
             })
         });
 
-        const result = await response.text();
-        console.log("Drive :", result);
+        console.log("Drive :", await response.text());
 
-        btn.textContent = "✅ Sauvegardé";
-        setTimeout(() => {
-            btn.textContent = "Sauvegarder";
-            btn.style.pointerEvents = "auto";
-        }, 2500);
 
     } catch (err) {
         console.error("Erreur sauvegarde :", err);
-        btn.textContent = "❌ Erreur";
-        setTimeout(() => {
-            btn.textContent = "Sauvegarder";
-            btn.style.pointerEvents = "auto";
-        }, 2500);
+    } finally {
+        btn.style.pointerEvents = "auto";
+        btn.style.opacity = "1";
     }
 }
 
