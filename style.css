@@ -35,6 +35,7 @@ font-family: "Inter", sans-serif;
     cursor: grab;
     user-select: none;
     will-change: transform; /* optimisation performance */
+    z-index: 10;
 }
 
 
@@ -61,6 +62,15 @@ font-family: "Inter", sans-serif;
     /* box-shadow: 5px 5px 5px #dbdbdb; */
 }
 
+@media (max-width: 600px) {
+    .devinette {
+        padding: 12px 30px; /* ⚠️ enlever la virgule */
+        font-size: 18px; /* texte plus petit */
+        max-width: 90vw; /* limite la largeur */
+        text-align: center; /* optionnel mais souvent mieux sur mobile */
+    }
+}
+
 .zone {
     display: flex;
     position: fixed;
@@ -85,8 +95,8 @@ font-family: "Inter", sans-serif;
 
 .info {
     position: fixed;
-    top: 18px;
-    right: 18px;
+    top: 10px;
+    right: 15px;
     z-index: 1000;
     padding: 10px 15px;
     cursor: pointer;
@@ -98,6 +108,8 @@ font-family: "Inter", sans-serif;
         width: 95px;
     }
 }
+
+
 
 /* Boutons */
 .boutons{
@@ -150,7 +162,6 @@ font-family: "Inter", sans-serif;
 }
 
 .poubelle--active {
-    background-color: #cc0000;
     color: white;
     transform: scale(1.2);
 }
@@ -283,7 +294,24 @@ font-family: "Inter", sans-serif;
     transition: all 0.8s ease;
 }
 
+@media (max-width: 600px) {
+    .mobile-only {
+        display: block;
+        position: fixed;   /* 👈 AJOUT IMPORTANT */
+        bottom: 20px;
+        left: 20px;
+        color: #c5c211;
+        font-style: italic;
+        font-size: 14px;
+        z-index: 5;
+    }
+}
 
+@media (min-width: 600px) {
+    .mobile-only {
+        display: none;
+    }
+}
 
 
 
